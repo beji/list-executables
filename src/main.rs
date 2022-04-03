@@ -69,18 +69,11 @@ fn main() {
             eprintln!("got {}", path);
 
             let split: Vec<&str> = path.split(":").collect();
-            let collected: Vec<_> = split
+
+            let executables: Vec<_> = split
                 .par_iter()
-                .map(|path_entry| visit_path_entry(path_entry))
+                .flat_map(|path_entry| visit_path_entry(path_entry))
                 .collect();
-
-            let mut executables: Vec<String> = Vec::new();
-
-            for collection in collected {
-                for executable in collection {
-                    executables.push(executable);
-                }
-            }
 
             let mut binaries: Vec<&str> = executables
                 .par_iter()
